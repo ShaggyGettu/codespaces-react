@@ -33,20 +33,10 @@
     -->
     <script>
       (function(){
-        function getiOSVersion(ua){
-          const m = ua.match(/OS (\d+)[._]?(\d+)?(?:[._]?(\d+))?/);
-          if(!m) return null;
-          return [m[1], m[2] || '0', m[3] || null].filter(Boolean).slice(0,2).join('.');
-        }
-
-        function isIOS(ua){
-          return /iPhone|iPad|iPod/.test(ua);
-        }
-
         // Global build() method: returns true if iOS major version < 18
         function build(){
           const ua = navigator.userAgent || '';
-          if(/iPhone|iPad|iPod/.test(ua)) return false;
+          if(!/iPhone|iPad|iPod/.test(ua)) return false;
           const m = ua.match(/OS (\d+)(?:[._]?(\d+))?/);
           if(!m) return false;
           const major = parseInt(m[1], 10);
