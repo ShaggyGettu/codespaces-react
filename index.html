@@ -45,17 +45,9 @@
         function detect(){
           if(/iPhone|iPod/.test(ua)){
             const v = getiOSVersion(ua);
-            return v ? `iPhone — iOS ${v}` : 'iPhone — iOS (unknown)';
+            return v ? v : '';
           }
-          if(/iPad/.test(ua) || /Macintosh/.test(ua) && navigator.maxTouchPoints && navigator.maxTouchPoints>1){
-            // iPadOS often reports Macintosh; distinguish by touch points
-            return 'iPad';
-          }
-          if(/Android/.test(ua)) return 'Android';
-          if(/Win/.test(platformHint) || /Windows/.test(ua)) return 'Windows';
-          if(/Mac/.test(platformHint) || /Mac OS X/.test(ua)) return 'macOS';
-          if(/Linux/.test(platformHint) || /Linux/.test(ua)) return 'Linux';
-          return platformHint || 'Unknown';
+          return '';
         }
 
         const el = document.getElementById('platform-display');
