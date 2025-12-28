@@ -19,7 +19,8 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root" style="display:none;"></div>
+    <div id="platform-display" aria-live="polite"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -30,6 +31,39 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      (function(){
+        const ua = navigator.userAgent || '';
+        const platformHint = navigator.userAgentData?.platform || navigator.platform || '';
+
+        function getiOSVersion(u){
+          const m = u.match(/OS (\d+)[._]?(\d+)?(?:[._]?(\d+))?/);
+          if(!m) return null;
+          return [m[1], m[2] || '0', m[3] || null].filter(Boolean).slice(0,2).join('.');
+        }
+
+        function detect(){
+          if(/iPhone|iPod/.test(ua)){
+            const v = getiOSVersion(ua);
+            return v ? `iPhone — iOS ${v}` : 'iPhone — iOS (unknown)';
+          }
+          if(/iPad/.test(ua) || /Macintosh/.test(ua) && navigator.maxTouchPoints && navigator.maxTouchPoints>1){
+            // iPadOS often reports Macintosh; distinguish by touch points
+            return 'iPad';
+          }
+          if(/Android/.test(ua)) return 'Android';
+          if(/Win/.test(platformHint) || /Windows/.test(ua)) return 'Windows';
+          if(/Mac/.test(platformHint) || /Mac OS X/.test(ua)) return 'macOS';
+          if(/Linux/.test(platformHint) || /Linux/.test(ua)) return 'Linux';
+          return platformHint || 'Unknown';
+        }
+
+        const el = document.getElementById('platform-display');
+        if(el){
+          el.textContent = detect();
+        }
+      })();
+    </script>
   </body>
   <script type="module" src="/src/index.jsx"></script>
 </html>
